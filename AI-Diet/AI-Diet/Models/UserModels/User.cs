@@ -2,7 +2,7 @@
 
 namespace AI_Diet.Models.UserModels
 {
-    public class User: IdentityUser
+    public class User : IdentityUser
     {
         public string Name { get; set; }
         public string SecondName { get; set; }
