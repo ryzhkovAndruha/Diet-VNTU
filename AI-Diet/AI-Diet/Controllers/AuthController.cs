@@ -11,7 +11,7 @@ namespace AI_Diet.Controllers
     {
         private IAuthService _authService;
 
-        public AuthController(IAuthService authService, AuthOptions authOptions)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
