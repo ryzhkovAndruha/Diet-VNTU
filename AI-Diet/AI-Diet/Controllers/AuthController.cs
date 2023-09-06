@@ -19,14 +19,12 @@ namespace AI_Diet.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginRequest)
         {
-            var user = await _authService.LoginAsync(loginRequest.Email, loginRequest.Password);
+            var loginResponse = await _authService.LoginAsync(loginRequest.Email, loginRequest.Password);
 
-            if (user == null)
+            if (loginResponse == null)
             {
                 return BadRequest();
             }
-
-            var loginResponse = _authService.CreateLoginResponse(user);
 
             return Ok(loginResponse);
         }

@@ -20,7 +20,7 @@ namespace AI_Diet.Authorization.Services
             _authOptions = authOptions;
         }
 
-        public async Task<User> LoginAsync(string email, string password)
+        public async Task<LoginResponse> LoginAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
@@ -29,7 +29,7 @@ namespace AI_Diet.Authorization.Services
                 return default;
             }
 
-            return user;
+            return CreateLoginResponse(user);
         }
 
         public async Task LogoutAsync()
