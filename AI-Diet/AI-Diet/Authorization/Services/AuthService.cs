@@ -24,6 +24,7 @@ namespace AI_Diet.Authorization.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+
             if (!result.Succeeded)
             {
                 return default;
@@ -41,7 +42,8 @@ namespace AI_Diet.Authorization.Services
         {
             return new LoginResponse
             {
-                AccessToken = CreateToken(),
+                AccessToken = CreateToken(false),
+                RefreshToken = CreateToken(true),
                 UserId = user.Id,
                 UserName = user.Email,
                 FirstName = user.Name,
@@ -49,7 +51,7 @@ namespace AI_Diet.Authorization.Services
             };
         }
 
-        private string CreateToken()
+        private string CreateToken(bool isRefreshToken)
         {
             var now = DateTime.Now;
 
@@ -57,11 +59,12 @@ namespace AI_Diet.Authorization.Services
                 issuer: _authOptions.Issuer,
                 audience: _authOptions.Audience,
                 notBefore: now,
-                expires: now.AddHours(_authOptions.Lifetime),
-                signingCredentials: new SigningCredentials(
-                    _authOptions.GetSymmetricSecurityKey(),
+                expires: isRefreshToken ? now.AddDays(_authOptions.RefreshTokenLifetime) : now.AddHours(_authOptions.AccessTokenLifetime),
+                signingCredentials: new SigningCredentials( isRefreshToken ?
+                    _authOptions.GetSymmetricSecurityRefreshKey() : _authOptions.GetSymmetricSecurityAccessKey(),
                     SecurityAlgorithms.HmacSha256)
             );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

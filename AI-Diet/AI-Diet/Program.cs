@@ -57,7 +57,7 @@ builder.Services.AddAuthentication(options =>
 
             ValidIssuer = authOptions.Issuer,
             ValidAudience = authOptions.Audience,
-            IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+            IssuerSigningKey = authOptions.GetSymmetricSecurityAccessKey(),
 
             ClockSkew = TimeSpan.Zero
         };
