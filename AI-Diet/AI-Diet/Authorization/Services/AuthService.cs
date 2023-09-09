@@ -1,4 +1,5 @@
 ﻿using AI_Diet.Authorization.Models;
+using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.ResponseModels;
 using AI_Diet.Models.UserModels;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +25,6 @@ namespace AI_Diet.Authorization.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-
             if (!result.Succeeded)
             {
                 return default;
@@ -41,22 +41,23 @@ namespace AI_Diet.Authorization.Services
         public async Task<LoginResponse> RegisterAsync(RegisterUserRequestModel registerUserRequestModel)
         {
             var userToRegister = new User(registerUserRequestModel);
-            try
-            {
-                var result = await _userManager.CreateAsync(userToRegister, registerUserRequestModel.Password);
+            var result = await _userManager.CreateAsync(userToRegister, registerUserRequestModel.Password);
 
-                if (!result.Succeeded)
-                {
-                    return default;
-                }
-            }
-            catch(Exception ex)
+            if (!result.Succeeded)
             {
-                var e = ex;
                 return default;
             }
 
             return CreateLoginResponse(userToRegister);
+        }
+
+        public RefreshTokenResponse CreateRefreshTokenResponse(RefreshTokenRequest refreshTokenRequest)
+        {
+            return new RefreshTokenResponse()
+            {
+                UserId = refreshTokenRequest.UserId,
+                AccessToken = CreateToken(false)
+            };
         }
 
         private LoginResponse CreateLoginResponse(User user)

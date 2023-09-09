@@ -4,13 +4,11 @@ using AI_Diet.Context;
 using AI_Diet.Models.UserModels;
 using AI_Diet.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("VntuDbConnection")));
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("VntuDbConnection")), ServiceLifetime.Singleton);
 
 builder.Services.AddIdentity<User, IdentityRole>(opts =>
 {
@@ -33,12 +31,14 @@ builder.Services.AddIdentity<User, IdentityRole>(opts =>
     opts.Password.RequireUppercase = true;
     opts.Password.RequireDigit = true;
 })
-    .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders()
     .AddSignInManager<SignInManager<User>>()
     .AddUserManager<UserManager<User>>();
 
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 AuthOptions authOptions = builder.Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
 builder.Services.AddAuthentication(options =>

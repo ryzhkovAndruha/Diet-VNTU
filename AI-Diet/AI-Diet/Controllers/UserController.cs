@@ -1,5 +1,6 @@
 ﻿using AI_Diet.Authorization.Services;
 using AI_Diet.Context;
+using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.ResponseModels;
 using AI_Diet.Models.UserModels;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,11 @@ namespace AI_Diet.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUserAsync([FromBody]RegisterUserRequestModel registerUserRequestModel)
         {
+            if (registerUserRequestModel.Password != registerUserRequestModel.RepeatPassword)
+            {
+                return BadRequest("Passwords are not matching");
+            }
+
             var loginResponse = await _authService.RegisterAsync(registerUserRequestModel);
 
             if (loginResponse == null)
