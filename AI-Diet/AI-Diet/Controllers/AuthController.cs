@@ -1,11 +1,8 @@
-﻿using AI_Diet.Authorization.Models;
-using AI_Diet.Authorization.Services;
+﻿using AI_Diet.Authorization.Services;
 using AI_Diet.Context;
 using AI_Diet.Models.RequestModels;
-using AI_Diet.Models.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 
 namespace AI_Diet.Controllers
 {
