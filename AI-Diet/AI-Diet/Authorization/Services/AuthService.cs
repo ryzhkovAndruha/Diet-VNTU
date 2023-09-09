@@ -38,7 +38,28 @@ namespace AI_Diet.Authorization.Services
             await _signInManager.SignOutAsync();
         }
 
-        public LoginResponse CreateLoginResponse(User user)
+        public async Task<LoginResponse> RegisterAsync(RegisterUserRequestModel registerUserRequestModel)
+        {
+            var userToRegister = new User(registerUserRequestModel);
+            try
+            {
+                var result = await _userManager.CreateAsync(userToRegister, registerUserRequestModel.Password);
+
+                if (!result.Succeeded)
+                {
+                    return default;
+                }
+            }
+            catch(Exception ex)
+            {
+                var e = ex;
+                return default;
+            }
+
+            return CreateLoginResponse(userToRegister);
+        }
+
+        private LoginResponse CreateLoginResponse(User user)
         {
             return new LoginResponse
             {
@@ -47,7 +68,7 @@ namespace AI_Diet.Authorization.Services
                 UserId = user.Id,
                 UserName = user.Email,
                 FirstName = user.Name,
-                LastName = user.Name,
+                LastName = user.SecondName,
             };
         }
 
