@@ -2,7 +2,6 @@
 using AI_Diet.Context;
 using AI_Diet.Models.RequestModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AI_Diet.Controllers
 {
@@ -10,13 +9,13 @@ namespace AI_Diet.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IAuthService _authService;
-        private ApplicationContext _dbContext;
+        private IAuthService _authService; 
+        ITokenService _tokenService;
 
-        public AuthController(IAuthService authService, ApplicationContext dbContext)
+        public AuthController(IAuthService authService, ITokenService tokenService)
         {
             _authService = authService;
-            _dbContext = dbContext;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
@@ -29,30 +28,31 @@ namespace AI_Diet.Controllers
                 return BadRequest();
             }
 
-            var loggedInUser = _dbContext.Users.FirstOrDefault(user => user.Id == loginResponse.UserId);
-            loggedInUser.RefreshToken = loginResponse.RefreshToken;
-            _dbContext.SaveChanges();
-
-            Response.Cookies.Append("Refresh-Token", loginResponse.RefreshToken);
-
+            Response.Cookies.Append("Refresh-Token", loginResponse.RefreshToken, new CookieOptions() { HttpOnly = true });
             return Ok(loginResponse);
         }
 
         [HttpPost("refreshToken")]
         public async Task<IActionResult> RefreshAccessTokenAsync(RefreshTokenRequest refreshTokenRequest)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Id == refreshTokenRequest.UserId);
-
-            if (user == null)
+            try
             {
-                return NotFound("User with such id is not found");
+                await _tokenService.ValidateRefreshTokenRequestAsync(refreshTokenRequest);
             }
-            if (user.RefreshToken != refreshTokenRequest.RefreshToken)
+            catch (KeyNotFoundException knfe)
             {
-                return Unauthorized("Refresh token is wrong");
+                return NotFound(knfe.Message);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                return Unauthorized(uae.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
-            return Ok(_authService.CreateRefreshTokenResponse(refreshTokenRequest));
+            return Ok(_tokenService.CreateRefreshTokenResponse(refreshTokenRequest));
         }
 
         [HttpPost("logout")]

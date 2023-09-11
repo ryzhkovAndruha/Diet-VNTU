@@ -1,6 +1,6 @@
-﻿namespace AI_Diet.Models.UserModels
+﻿namespace AI_Diet.Models.RequestModels
 {
-    public class RegisterUserRequestModel
+    public class RegisterUserRequest
     {
         public string Name { get; set; }
         public string SecondName { get; set; }

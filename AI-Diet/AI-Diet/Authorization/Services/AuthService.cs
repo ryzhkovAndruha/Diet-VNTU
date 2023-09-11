@@ -1,10 +1,8 @@
-﻿using AI_Diet.Authorization.Models;
+﻿using AI_Diet.Context;
 using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.ResponseModels;
 using AI_Diet.Models.UserModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace AI_Diet.Authorization.Services
 {
@@ -12,13 +10,15 @@ namespace AI_Diet.Authorization.Services
     {
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
-        private AuthOptions _authOptions;
+        private ITokenService _tokenService;
+        private ApplicationContext _dbContext;
 
-        public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, AuthOptions authOptions)
+        public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, ITokenService tokenService, ApplicationContext dbContext)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _authOptions = authOptions;
+            _tokenService = tokenService;
+            _dbContext = dbContext;
         }
 
         public async Task<LoginResponse> LoginAsync(string email, string password)
@@ -30,7 +30,13 @@ namespace AI_Diet.Authorization.Services
                 return default;
             }
 
-            return CreateLoginResponse(user);
+            var loginResponse = CreateLoginResponse(user);
+            var loggedInUser = _dbContext.Users.FirstOrDefault(user => user.Id == loginResponse.UserId);
+
+            loggedInUser.RefreshToken = loginResponse.RefreshToken;
+            _dbContext.SaveChanges();
+
+            return loginResponse;
         }
 
         public async Task LogoutAsync()
@@ -38,7 +44,7 @@ namespace AI_Diet.Authorization.Services
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<LoginResponse> RegisterAsync(RegisterUserRequestModel registerUserRequestModel)
+        public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest registerUserRequestModel)
         {
             var userToRegister = new User(registerUserRequestModel);
             var result = await _userManager.CreateAsync(userToRegister, registerUserRequestModel.Password);
@@ -48,24 +54,15 @@ namespace AI_Diet.Authorization.Services
                 return default;
             }
 
-            return CreateLoginResponse(userToRegister);
-        }
-
-        public RefreshTokenResponse CreateRefreshTokenResponse(RefreshTokenRequest refreshTokenRequest)
-        {
-            return new RefreshTokenResponse()
-            {
-                UserId = refreshTokenRequest.UserId,
-                AccessToken = CreateToken(false)
-            };
+            return CreateRegisterReponse(userToRegister);
         }
 
         private LoginResponse CreateLoginResponse(User user)
         {
             return new LoginResponse
             {
-                AccessToken = CreateToken(false),
-                RefreshToken = CreateToken(true),
+                AccessToken = _tokenService.CreateToken(false),
+                RefreshToken = _tokenService.CreateToken(true),
                 UserId = user.Id,
                 UserName = user.Email,
                 FirstName = user.Name,
@@ -73,21 +70,15 @@ namespace AI_Diet.Authorization.Services
             };
         }
 
-        private string CreateToken(bool isRefreshToken)
+        private RegisterUserResponse CreateRegisterReponse(User user)
         {
-            var now = DateTime.Now;
-
-            var token = new JwtSecurityToken(
-                issuer: _authOptions.Issuer,
-                audience: _authOptions.Audience,
-                notBefore: now,
-                expires: isRefreshToken ? now.AddDays(_authOptions.RefreshTokenLifetime) : now.AddHours(_authOptions.AccessTokenLifetime),
-                signingCredentials: new SigningCredentials( isRefreshToken ?
-                    _authOptions.GetSymmetricSecurityRefreshKey() : _authOptions.GetSymmetricSecurityAccessKey(),
-                    SecurityAlgorithms.HmacSha256)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new RegisterUserResponse
+            {
+                UserId = user.Id,
+                UserName = user.Email,
+                FirstName = user.Name,
+                LastName = user.SecondName,
+            };
         }
     }
 }

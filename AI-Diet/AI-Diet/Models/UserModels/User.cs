@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AI_Diet.Models.RequestModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace AI_Diet.Models.UserModels
 {
@@ -14,7 +15,7 @@ namespace AI_Diet.Models.UserModels
         public User()
         {}
 
-        public User(RegisterUserRequestModel registerUserRequestModel)
+        public User(RegisterUserRequest registerUserRequestModel)
         {
             Name = registerUserRequestModel.Name;
             SecondName = registerUserRequestModel.SecondName;
