@@ -12,7 +12,7 @@ namespace AI_Diet.Models.UserModels
         public DietGoal Goal { get; set; }
         public string PhysicalActivity { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
     }
 }
