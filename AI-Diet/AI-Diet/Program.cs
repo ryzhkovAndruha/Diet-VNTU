@@ -20,6 +20,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
+builder.Services.AddCors(policy => policy.AddPolicy("AllowAnyOrigin",
+                builder =>
+                {
+                    builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed(origin => true)
+                        .AllowCredentials();
+                }));
+
 builder.Services.AddDbContext<ApplicationContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("VntuDbConnection")), ServiceLifetime.Singleton);
 
@@ -72,6 +82,8 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseCors("AllowAnyOrigin");
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
