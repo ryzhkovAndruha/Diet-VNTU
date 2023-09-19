@@ -5,6 +5,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>AI_Diet</RootNamespace>
+    <UserSecretsId>61f87b8f-1cfe-4c51-9099-44f9a745b2e5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
