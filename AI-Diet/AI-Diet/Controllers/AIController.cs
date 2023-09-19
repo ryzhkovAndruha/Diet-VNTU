@@ -1,6 +1,6 @@
-﻿using AI_Diet.Authorization.Services;
-using AI_Diet.Context;
+﻿using AI_Diet.Context;
 using AI_Diet.Models.UserModels;
+using AI_Diet.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

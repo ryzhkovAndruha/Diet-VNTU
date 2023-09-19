@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AI_Diet.Authorization.Services
+namespace AI_Diet.Services
 {
     public class ChatGptService : IChatGptService
     {

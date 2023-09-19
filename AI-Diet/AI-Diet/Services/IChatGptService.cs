@@ -1,4 +1,4 @@
-﻿namespace AI_Diet.Authorization.Services
+﻿namespace AI_Diet.Services
 {
     public interface IChatGptService
     {
