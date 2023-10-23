@@ -30,8 +30,8 @@ namespace AI_Diet.Authorization.Services
         public async Task<IEnumerable<GetUserModel>> GetAsync()
         {
             return await _userManager.Users
-                .Include(x => x.CalorieCalculatorData)
                 .Include(x => x.DietData)
+                .Include(x => x.FoodDetails)
                 .Select(x => new GetUserModel
                 {
                     Email = x.Email,

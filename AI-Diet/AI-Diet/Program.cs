@@ -2,6 +2,7 @@ using AI_Diet.Authorization.Models;
 using AI_Diet.Authorization.Services;
 using AI_Diet.Context;
 using AI_Diet.Models.UserModels;
+using AI_Diet.Services;
 using AI_Diet.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -50,6 +51,9 @@ builder.Services.AddIdentity<User, IdentityRole>(opts =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IChatGptService, ChatGptService>();
+builder.Services.AddScoped<IChatRequestBuilder, ChatRequestBuilder>();
 
 AuthOptions authOptions = builder.Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
 builder.Services.AddAuthentication(options =>

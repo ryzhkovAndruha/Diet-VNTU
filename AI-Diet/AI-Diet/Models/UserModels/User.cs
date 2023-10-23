@@ -9,8 +9,8 @@ namespace AI_Diet.Models.UserModels
         public string SecondName { get; set; }
         public string RefreshToken { get; set; }
 
-        public CalorieCalculatorData CalorieCalculatorData { get; set; }
         public DietData DietData { get; set; }
+        public FoodDetails FoodDetails { get; set; }
 
         public User()
         {}

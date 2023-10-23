@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AI_Diet.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private IAuthService _authService; 
-        ITokenService _tokenService;
+        private ITokenService _tokenService;
 
         public AuthController(IAuthService authService, ITokenService tokenService)
         {
@@ -31,7 +31,7 @@ namespace AI_Diet.Controllers
             return Ok(loginResponse);
         }
 
-        [HttpPost("refreshToken")]
+        [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshAccessTokenAsync(RefreshTokenRequest refreshTokenRequest)
         {
             try

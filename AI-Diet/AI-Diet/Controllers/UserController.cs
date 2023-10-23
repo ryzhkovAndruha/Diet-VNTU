@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AI_Diet.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
