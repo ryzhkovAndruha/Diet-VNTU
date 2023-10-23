@@ -24,7 +24,7 @@ namespace AI_Diet.Controllers
 
             if (loginResponse == null)
             {
-                return BadRequest();
+                return BadRequest("Email or Password is invalid");
             }
 
             Response.Cookies.Append("Refresh-Token", loginResponse.RefreshToken, new CookieOptions() { HttpOnly = true });

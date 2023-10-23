@@ -25,6 +25,7 @@ namespace AI_Diet.Authorization.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+
             if (!result.Succeeded)
             {
                 return default;
@@ -51,7 +52,7 @@ namespace AI_Diet.Authorization.Services
 
             if (!result.Succeeded)
             {
-                return default;
+                return new RegisterUserResponseErrors() { RegisterErrors = result.Errors?.Select(x => x.Description).ToList() };
             }
 
             return CreateRegisterReponse(userToRegister);
