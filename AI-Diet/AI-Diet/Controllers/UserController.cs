@@ -1,5 +1,6 @@
 ﻿using AI_Diet.Authorization.Services;
 using AI_Diet.Models.RequestModels;
+using AI_Diet.Models.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AI_Diet.Controllers
@@ -25,9 +26,9 @@ namespace AI_Diet.Controllers
 
             var registerResponse = await _authService.RegisterAsync(registerUserRequestModel);
 
-            if (registerResponse == null)
+            if (registerResponse is RegisterUserResponseErrors registerResponseErrors)
             {
-                return BadRequest("Failed to register User");
+                return BadRequest(registerResponseErrors.RegisterErrors);
             }
 
             return Ok(registerResponse);
