@@ -1,4 +1,5 @@
-﻿using AI_Diet.Context;
+﻿using AI_Diet.Authorization.Services.Interfaces;
+using AI_Diet.Context;
 using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.ResponseModels;
 using AI_Diet.Models.UserModels;
@@ -10,8 +11,8 @@ namespace AI_Diet.Authorization.Services
     {
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
-        private ITokenService _tokenService;
         private ApplicationContext _dbContext;
+        private ITokenService _tokenService;
 
         public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, ITokenService tokenService, ApplicationContext dbContext)
         {
@@ -56,6 +57,19 @@ namespace AI_Diet.Authorization.Services
             }
 
             return CreateRegisterReponse(userToRegister);
+        }
+
+        public async Task<DeleteUserResponse> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new DeleteUserResponse(false) { Errors = new List<string>() { "User not found" } };
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            return new DeleteUserResponse(result.Succeeded) { Errors = result.Errors?.Select(x => x.Description).ToList() };
         }
 
         private LoginResponse CreateLoginResponse(User user)

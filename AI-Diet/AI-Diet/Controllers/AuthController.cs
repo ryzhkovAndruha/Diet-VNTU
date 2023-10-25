@@ -1,4 +1,4 @@
-﻿using AI_Diet.Authorization.Services;
+﻿using AI_Diet.Authorization.Services.Interfaces;
 using AI_Diet.Models.RequestModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,6 +59,7 @@ namespace AI_Diet.Controllers
         {
             await _authService.LogoutAsync();
 
+            Response.Cookies.Delete("Refresh-Token", new CookieOptions() { HttpOnly = true });
             return Ok();
         }
     }

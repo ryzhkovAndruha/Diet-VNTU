@@ -1,7 +1,7 @@
 ﻿using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.ResponseModels;
 
-namespace AI_Diet.Authorization.Services
+namespace AI_Diet.Authorization.Services.Interfaces
 {
     public interface ITokenService
     {

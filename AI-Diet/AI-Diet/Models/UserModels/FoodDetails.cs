@@ -1,4 +1,6 @@
-﻿namespace AI_Diet.Models.UserModels
+﻿using AI_Diet.Models.RequestModels;
+
+namespace AI_Diet.Models.UserModels
 {
     public class FoodDetails
     {
@@ -10,5 +12,19 @@
 
         public string UserId { get; set; }
         public User User { get; set; }
+
+        public FoodDetails()
+        {
+            
+        }
+
+        public FoodDetails(AddFoodDetailsRequest addFoodDetailsRequest)
+        {
+            Allergies = addFoodDetailsRequest.Allergies;
+            FoodRestrictions = addFoodDetailsRequest.FoodRestrictions;
+            FoodPreferences = addFoodDetailsRequest.FoodPreferences;
+            DislikeFood = addFoodDetailsRequest.DislikeFood;
+            UserId = addFoodDetailsRequest.UserId;
+        }
     }
 }
