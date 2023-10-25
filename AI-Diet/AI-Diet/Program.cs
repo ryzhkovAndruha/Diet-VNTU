@@ -1,5 +1,6 @@
 using AI_Diet.Authorization.Models;
 using AI_Diet.Authorization.Services;
+using AI_Diet.Authorization.Services.Interfaces;
 using AI_Diet.Context;
 using AI_Diet.Models.UserModels;
 using AI_Diet.Services;

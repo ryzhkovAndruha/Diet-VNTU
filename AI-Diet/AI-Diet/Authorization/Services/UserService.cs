@@ -1,55 +1,46 @@
-﻿using AI_Diet.Authorization.Models;
+﻿using AI_Diet.Authorization.Services.Interfaces;
+using AI_Diet.Context;
+using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.UserModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace AI_Diet.Authorization.Services
 {
     public class UserService : IUserService
     {
-        private UserManager<User> _userManager;
+        ApplicationContext _dbContext;
 
-        public UserService(UserManager<User> userManager)
+        public UserService(ApplicationContext dbContext)
         {
-            _userManager = userManager;
+            _dbContext = dbContext;
         }
 
-        public async Task<bool> ChangePasswordAsync(string email, string passworrd, string newPassword)
+        public bool AddDietData(DietData dietData)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user is null)
+            try
             {
-                throw new Exception("User not exists");
+                _dbContext.DietData.Add(dietData);
+                _dbContext.SaveChanges();
+
+                return true;
             }
-
-            var result = await _userManager.ChangePasswordAsync(user, passworrd, newPassword);
-
-            return result.Succeeded;
-        }
-
-        public async Task<IEnumerable<GetUserModel>> GetAsync()
-        {
-            return await _userManager.Users
-                .Include(x => x.DietData)
-                .Include(x => x.FoodDetails)
-                .Select(x => new GetUserModel
-                {
-                    Email = x.Email,
-                    Name = x.Name,
-                })
-                .ToListAsync();
-        }
-
-        public async Task<bool> RemoveAsync(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user is null)
+            catch
             {
-                throw new Exception("User not exists");
+                return false;
             }
-            var result = await _userManager.DeleteAsync(user);
+        }
+        public bool AddFoodDetails(FoodDetails foodDetails)
+        {
+            try
+            {
+                _dbContext.FoodDetails.Add(foodDetails);
+                _dbContext.SaveChanges();
 
-            return result.Succeeded;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

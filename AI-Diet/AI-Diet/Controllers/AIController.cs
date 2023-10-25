@@ -16,7 +16,7 @@ namespace AI_Diet.Controllers
 
         private ApplicationContext _applicationContext;
         
-        public AIController(IChatGptService chatGptService, IChatRequestBuilder requestBuilder,ApplicationContext applicationContext)
+        public AIController(IChatGptService chatGptService, IChatRequestBuilder requestBuilder, ApplicationContext applicationContext)
         {
             _chatGptService = chatGptService;
             _requestBuilder = requestBuilder;

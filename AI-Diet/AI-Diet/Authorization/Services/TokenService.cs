@@ -1,4 +1,5 @@
 ﻿using AI_Diet.Authorization.Models;
+using AI_Diet.Authorization.Services.Interfaces;
 using AI_Diet.Context;
 using AI_Diet.Models.RequestModels;
 using AI_Diet.Models.ResponseModels;
