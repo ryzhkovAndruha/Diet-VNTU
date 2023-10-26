@@ -20,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(3);
+    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(10);
 }
 );
 builder.Services.AddSwaggerGen();
