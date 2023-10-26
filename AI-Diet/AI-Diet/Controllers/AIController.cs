@@ -3,6 +3,7 @@ using AI_Diet.Models.UserModels;
 using AI_Diet.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace AI_Diet.Controllers
 {
