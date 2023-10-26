@@ -1,9 +1,6 @@
 ﻿using AI_Diet.Models;
 using AI_Diet.Models.UserModels;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
 
 namespace AI_Diet.Services
 {
