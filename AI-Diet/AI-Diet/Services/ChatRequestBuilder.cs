@@ -15,26 +15,26 @@ namespace AI_Diet.Services
 
             dietRequest.AppendLine("\"role\": \"system\", \"content\": \"Ти персональний дієтолог\"},");
             BuildBaseMessage(dietRequestModel.DietData, dietRequest);
-            dietRequest.AppendLine("Мені потрібно щоб ти розписав мені дієту згідно моїх параметрів.");
+            dietRequest.Append("Мені потрібно щоб ти розписав мені дієту згідно моїх параметрів.");
 
             if (IsAnyFoodDetails(foodDetails))
             {
                 AppendFoodDetails(foodDetails, dietRequest);
             }
-            dietRequest.Append("Дієту розпиши наче ти персональний дієтолог, і розписуєш дієту своєму клієнту у вигляді документу\"}");
-
-            return dietRequest.ToString();
+            dietRequest.Append("Дієту розпиши наче ти персональний дієтолог, і розписуєш дієту своєму клієнту у вигляді документу\"}]}");
+            var result = dietRequest.ToString();
+            return result;
         }
 
         public string BuildTrainingRequest(DietData dietData)
         {
             var trainingRequest = new StringBuilder(_messageBegining);
 
-            trainingRequest.AppendLine("\"role\": \"system\", \"content\": \"Ти персональний тренер\"},");
+            trainingRequest.Append("\"role\": \"system\", \"content\": \"Ти персональний тренер\"},");
             BuildBaseMessage(dietData, trainingRequest);
-            trainingRequest.AppendLine("Мені потрібно, щоб ти розписав мені персональні тренування у спортивному залі, " +
+            trainingRequest.Append("Мені потрібно, щоб ти розписав мені персональні тренування у спортивному залі, " +
                 "по дням, для досягнення моєї цілі. Тренування розпиши наче ти персональний тренер, " +
-                "і розписуєш тренування своєму клієнту у вигляді документу");
+                "і розписуєш тренування своєму клієнту у вигляді документу\"}]}");
 
             return trainingRequest.ToString();
         }
@@ -44,7 +44,7 @@ namespace AI_Diet.Services
             var goal = AdjustGoalToString(dietData.Goal);
             var gender = AdjustGenderToString(dietData.Gender);
 
-            request.AppendLine($"{{ \"role\": \"user\", \"content\": \"" +
+            request.Append($"{{ \"role\": \"user\", \"content\": \"" +
                 $"Я {gender} мені {dietData.Age} років, мій зріст {dietData.Height} сантиметрів, " +
                 $"а моя вага складає {dietData.Weight} кілограм. Мою денну фізичну активність можна описати так: {dietData.PhysicalActivity}," +
                 $"а моя ціль: {goal}.");
@@ -80,24 +80,24 @@ namespace AI_Diet.Services
 
         private void AppendFoodDetails(FoodDetails dietData, StringBuilder dietRequest)
         {
-            dietRequest.AppendLine("Але, будь ласка, зверни увагу на деякі деталі, щодо майбутньої дієти:");
+            dietRequest.Append("Але, будь ласка, зверни увагу на деякі деталі, щодо майбутньої дієти:");
 
             if (!string.IsNullOrEmpty(dietData.Allergies))
             {
-                dietRequest.AppendLine($"* У мене є алергія на наступне: {dietData.Allergies}.");
+                dietRequest.Append($"* У мене є алергія на наступне: {dietData.Allergies}.");
             }
             if (!string.IsNullOrEmpty(dietData.FoodRestrictions))
             {
-                dietRequest.AppendLine($"* У мене є обмеження у споживанні: {dietData.FoodRestrictions}.");
+                dietRequest.Append($"* У мене є обмеження у споживанні: {dietData.FoodRestrictions}.");
             }
             if (!string.IsNullOrEmpty(dietData.DislikeFood))
             {
-                dietRequest.AppendLine($"* Мені не подобається наступна їжа: {dietData.DislikeFood}, " +
+                dietRequest.Append($"* Мені не подобається наступна їжа: {dietData.DislikeFood}, " +
                     $"тому при побудові дієти використовуй її по мінімум.");
             }
             if (!string.IsNullOrEmpty(dietData.FoodPreferences))
             {
-                dietRequest.AppendLine($"* Я люблю наступну їжу: {dietData.FoodPreferences}.");
+                dietRequest.Append($"* Я люблю наступну їжу: {dietData.FoodPreferences}.");
             }
         }
 
