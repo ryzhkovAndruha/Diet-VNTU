@@ -81,7 +81,6 @@ namespace AI_Diet.Authorization.Services
                 UserId = user.Id,
                 UserName = user.Email,
                 FirstName = user.Name,
-                LastName = user.SecondName,
             };
         }
 
@@ -92,7 +91,6 @@ namespace AI_Diet.Authorization.Services
                 UserId = user.Id,
                 UserName = user.Email,
                 FirstName = user.Name,
-                LastName = user.SecondName,
             };
         }
     }
