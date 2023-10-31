@@ -35,7 +35,7 @@ namespace AI_Diet.Controllers
 
                 if (dietData == null)
                 {
-                    return NotFound("User not found");
+                    return NotFound($"No information about diet for user {userId}");
                 }
 
                 var dietRequest = _requestBuilder.BuildDietRequest(new DietRequestModel(dietData, foodDetails));
