@@ -10,11 +10,16 @@ namespace AI_Diet.Controllers
     {
         private IAuthService _authService; 
         private ITokenService _tokenService;
+        private IConfiguration _configuration;
 
-        public AuthController(IAuthService authService, ITokenService tokenService)
+        private const string REFRESH_TOKEN_EXPIRES = "RefreshTokenLifetime";
+
+        public AuthController(IAuthService authService, ITokenService tokenService, IConfiguration configuration)
         {
             _authService = authService;
             _tokenService = tokenService;
+
+            _configuration = configuration;
         }
 
         [HttpPost("login")]
@@ -27,7 +32,10 @@ namespace AI_Diet.Controllers
                 return BadRequest("Email or Password is invalid");
             }
 
-            Response.Cookies.Append("Refresh-Token", loginResponse.RefreshToken, new CookieOptions() { HttpOnly = true });
+            var refreshTokenDaysExpirationTime = _configuration.GetValue<int>(REFRESH_TOKEN_EXPIRES);
+
+            Response.Cookies.Append("Refresh-Token", loginResponse.RefreshToken, new CookieOptions() { HttpOnly = true, 
+                Expires = DateTimeOffset.Now.AddDays(refreshTokenDaysExpirationTime) });
             return Ok(loginResponse);
         }
 
