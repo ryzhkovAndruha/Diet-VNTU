@@ -10,6 +10,8 @@ namespace AI_Diet.Models.UserModels
 
         public DietData DietData { get; set; }
         public FoodDetails FoodDetails { get; set; }
+        public string Diet { get; set; }
+        public string Training { get; set; }
 
         public User()
         {}

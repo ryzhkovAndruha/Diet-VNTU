@@ -1,4 +1,5 @@
 ﻿using AI_Diet.Models.RequestModels;
+using AI_Diet.Models.ResponseModels;
 using AI_Diet.Models.UserModels;
 
 namespace AI_Diet.Authorization.Services.Interfaces
@@ -7,5 +8,8 @@ namespace AI_Diet.Authorization.Services.Interfaces
     {
         bool AddDietData(DietData dietDataRequest);
         bool AddFoodDetails(FoodDetails foodDetailsRequest);
+        bool AddDietToUser(AddDietToUserRequestModel dietModel);
+        bool AddTrainingToUser(AddTrainingToUserRequestModel trainingModel);
+        GetUserResponseModel GetUser(string userId);
     }
 }

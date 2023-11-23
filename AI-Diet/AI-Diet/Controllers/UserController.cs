@@ -63,5 +63,32 @@ namespace AI_Diet.Controllers
             Response.Cookies.Delete("Refresh-Token", new CookieOptions() { HttpOnly = true });
             return deleteResponse.IsDeleted ? Ok() : BadRequest(deleteResponse.Errors);
         }
+
+        [Authorize]
+        [HttpPost("add-diet-to-user")]
+        public async Task<ActionResult> AddDietToUser([FromBody] AddDietToUserRequestModel addDietToUserRequestModel)
+        {
+            var result = _userService.AddDietToUser(addDietToUserRequestModel);
+
+            return result ? Ok("Added succesfully") : NotFound("User with such id is not found");
+        }
+
+        [Authorize]
+        [HttpPost("add-training-to-user")]
+        public async Task<ActionResult> AddTrainingToUser([FromBody] AddTrainingToUserRequestModel addTrainingToUserRequestModel)
+        {
+            var result = _userService.AddTrainingToUser(addTrainingToUserRequestModel);
+
+            return result ? Ok("Added succesfully") : NotFound("User with such id is not found");
+        }
+
+        [Authorize]
+        [HttpGet("get-user")]
+        public async Task<ActionResult> GetUser(string userId)
+        {
+            var result = _userService.GetUser(userId);
+
+            return result != null ? Ok(result) : NotFound("User with such id is not found");
+        }
     }
 }

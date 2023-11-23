@@ -33,6 +33,7 @@ namespace AI_Diet.Services
             var token = _configuration.GetValue<string>(CHAT_GPT_TOKEN);
 
             _chatGptClient.DefaultRequestHeaders.Add("authorization", $"Bearer {token}");
+            _chatGptClient.Timeout = TimeSpan.FromMinutes(5);
         }
     }
 }
